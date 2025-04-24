@@ -22,3 +22,24 @@ variable "private_subnet_cidrs" {
   description = "CIDRs for private subnets"
   type        = list(string)
 }
+
+variable "ami_id" {
+  description = "AMI ID to use for EC2 instances"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "Type of EC2 instance to launch"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "key_name" {
+  description = "Name of the key pair for SSH access"
+  type        = string
+}
+
+variable "ssh_access_cidr" {
+  description = "CIDR block for SSH access to EC2 instance"
+  type        = string
+}
