@@ -88,7 +88,10 @@ resource "aws_instance" "bastion" {
   }
 }
 
-# Allow SSH from bastion host to EC2 instance in the private subnet
+#
+# This rule allows the bastion host to SSH into the private EC2 instance.
+# It's critical for jump box access, and can be removed once SSM or ALB routing is fully in place.
+#
 resource "aws_security_group_rule" "ssh_from_bastion_to_ec2" {
   type                     = "ingress"
   from_port                = 22

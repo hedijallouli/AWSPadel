@@ -34,15 +34,3 @@ resource "aws_security_group" "ec2_sg" {
     Name = "wordpress-ec2-sg"
   }
 }
-
-# Allow SSH from bastion host to EC2 instance in the private subnet
-resource "aws_security_group_rule" "ssh_from_bastion_to_ec2" {
-  type                     = "ingress"
-  from_port                = 22
-  to_port                  = 22
-  protocol                 = "tcp"
-  security_group_id        = module.security.ec2_sg_id
-  source_security_group_id = aws_security_group.bastion_sg.id
-
-  description = "Allow SSH from bastion SG to EC2 SG"
-}
