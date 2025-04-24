@@ -32,3 +32,41 @@ module "ec2" {
   security_group_id  = module.security.ec2_sg_id
   key_name           = var.key_name
 }
+
+# Bastion security group
+resource "aws_security_group" "bastion_sg" {
+  name        = "bastion-sg"
+  description = "Allow SSH from your IP"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.ssh_access_cidr]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "bastion-sg"
+  }
+}
+
+# Bastion EC2 instance in public subnet
+resource "aws_instance" "bastion" {
+  ami                    = var.ami_id
+  instance_type          = "t2.micro"
+  subnet_id              = module.vpc.public_subnet_ids[0]
+  key_name               = var.key_name
+  vpc_security_group_ids = [aws_security_group.bastion_sg.id]
+
+  tags = {
+    Name = "bastion-host"
+  }
+}

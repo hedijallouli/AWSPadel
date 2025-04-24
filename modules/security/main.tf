@@ -21,6 +21,15 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks = [var.ssh_access_cidr]
   }
 
+  # Ingress rule to allow SSH access from the bastion host
+  ingress {
+    description     = "Allow SSH from bastion"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
   # Egress rule to allow all outbound traffic
   egress {
     description = "Allow all outbound"
