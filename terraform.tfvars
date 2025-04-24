@@ -7,3 +7,5 @@ private_subnet_cidrs = ["10.0.101.0/24", "10.0.102.0/24"]
 ami_id                = "ami-05572e392e80aee89"
 instance_type         = "t2.micro"
 key_name              = "vockey"
+
+ssh_access_cidr   = "109.222.60.117/32"

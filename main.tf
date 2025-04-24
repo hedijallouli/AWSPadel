@@ -17,6 +17,13 @@ module "vpc" {
   private_subnet_cidrs = var.private_subnet_cidrs
 }
 
+# Security module
+module "security" {
+  source            = "./modules/security"
+  vpc_id            = module.vpc.vpc_id
+  ssh_access_cidr   = var.ssh_access_cidr
+}
+
 module "ec2" {
   source             = "./modules/ec2"
   ami_id             = var.ami_id
@@ -24,11 +31,4 @@ module "ec2" {
   private_subnet_id  = module.vpc.private_subnet_ids[0]
   security_group_id  = module.security.ec2_sg_id
   key_name           = var.key_name
-}
-
-# Security module
-module "security" {
-  source            = "./modules/security"
-  vpc_id            = module.vpc.vpc_id
-  ssh_access_cidr   = "109.222.60.117/32"
 }
