@@ -33,6 +33,23 @@ module "ec2" {
   key_name           = var.key_name
 }
 
+#
+# ----------------------------------------------------------------------
+# Bastion Host Setup (Temporary)
+#
+# This EC2 instance is deployed in a public subnet to serve as a jump box
+# for securely accessing the WordPress EC2 instance deployed in a private subnet.
+#
+# It uses a dedicated security group that allows SSH access only from the
+# user's IP address (defined via ssh_access_cidr). Additionally, a separate
+# security group rule is configured to allow this bastion to reach the
+# private EC2 instance over port 22 (SSH).
+#
+# Once an Application Load Balancer (ALB) is deployed to access WordPress
+# over HTTP, and optionally SSM is configured for secure management,
+# this bastion instance can be removed.
+# ----------------------------------------------------------------------
+#
 # Bastion security group
 resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"
@@ -69,4 +86,16 @@ resource "aws_instance" "bastion" {
   tags = {
     Name = "bastion-host"
   }
+}
+
+# Allow SSH from bastion host to EC2 instance in the private subnet
+resource "aws_security_group_rule" "ssh_from_bastion_to_ec2" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  security_group_id        = module.security.ec2_sg_id
+  source_security_group_id = aws_security_group.bastion_sg.id
+
+  description = "Allow SSH from bastion SG to EC2 SG"
 }
