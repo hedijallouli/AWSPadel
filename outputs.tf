@@ -16,6 +16,6 @@ output "alb_dns_name" {
 }
 
 output "wordpress_instance_id" {
-  value       = module.ec2.wordpress_instance_id
+  value       = module.ec2.instance_id
   description = "ID of the WordPress EC2 instance"
 }
