@@ -40,3 +40,8 @@ resource "aws_instance" "wordpress" {
     Name = "wordpress-ec2"
   }
 }
+resource "aws_lb_target_group_attachment" "wordpress_attachment" {
+  target_group_arn = var.target_group_arn
+  target_id        = aws_instance.wordpress.id
+  port             = 80
+}

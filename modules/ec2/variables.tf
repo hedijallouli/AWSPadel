@@ -26,3 +26,8 @@ variable "key_name" {
   description = "Name of the SSH key pair"
   type        = string
 }
+
+variable "target_group_arn" {
+  type        = string
+  description = "ARN of the ALB target group"
+}

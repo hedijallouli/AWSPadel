@@ -31,6 +31,7 @@ module "ec2" {
   private_subnet_id  = module.vpc.private_subnet_ids[0]
   security_group_id  = module.security.ec2_sg_id
   key_name           = var.key_name
+  target_group_arn   = module.alb.target_group_arn
 }
 
 #
@@ -50,55 +51,62 @@ module "ec2" {
 # this bastion instance can be removed.
 # ----------------------------------------------------------------------
 #
-# Bastion security group
-resource "aws_security_group" "bastion_sg" {
-  name        = "bastion-sg"
-  description = "Allow SSH from your IP"
-  vpc_id      = module.vpc.vpc_id
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.ssh_access_cidr]
-  }
+# -------------------------------------------------------
+# Bastion setup temporarily disabled (replaced by ALB)
+# -------------------------------------------------------
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "bastion-sg"
-  }
-}
-
-# Bastion EC2 instance in public subnet
-resource "aws_instance" "bastion" {
-  ami                    = var.ami_id
-  instance_type          = "t2.micro"
-  subnet_id              = module.vpc.public_subnet_ids[0]
-  key_name               = var.key_name
-  vpc_security_group_ids = [aws_security_group.bastion_sg.id]
-
-  tags = {
-    Name = "bastion-host"
-  }
-}
-
+# resource "aws_security_group" "bastion_sg" {
+#   name        = "bastion-sg"
+#   description = "Allow SSH from your IP"
+#   vpc_id      = module.vpc.vpc_id
 #
-# This rule allows the bastion host to SSH into the private EC2 instance.
-# It's critical for jump box access, and can be removed once SSM or ALB routing is fully in place.
+#   ingress {
+#     from_port   = 22
+#     to_port     = 22
+#     protocol    = "tcp"
+#     cidr_blocks = [var.ssh_access_cidr]
+#   }
 #
-resource "aws_security_group_rule" "ssh_from_bastion_to_ec2" {
-  type                     = "ingress"
-  from_port                = 22
-  to_port                  = 22
-  protocol                 = "tcp"
-  security_group_id        = module.security.ec2_sg_id
-  source_security_group_id = aws_security_group.bastion_sg.id
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#
+#   tags = {
+#     Name = "bastion-sg"
+#   }
+# }
 
-  description = "Allow SSH from bastion SG to EC2 SG"
+# resource "aws_instance" "bastion" {
+#   ami                    = var.ami_id
+#   instance_type          = "t2.micro"
+#   subnet_id              = module.vpc.public_subnet_ids[0]
+#   key_name               = var.key_name
+#   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
+#
+#   tags = {
+#     Name = "bastion-host"
+#   }
+# }
+
+# resource "aws_security_group_rule" "ssh_from_bastion_to_ec2" {
+#   type                     = "ingress"
+#   from_port                = 22
+#   to_port                  = 22
+#   protocol                 = "tcp"
+#   security_group_id        = module.security.ec2_sg_id
+#   source_security_group_id = aws_security_group.bastion_sg.id
+#
+#   description = "Allow SSH from bastion SG to EC2 SG"
+# }
+
+# Application Load Balancer module
+module "alb" {
+  source            = "./modules/alb"
+  public_subnet_ids = module.vpc.public_subnet_ids
+  vpc_id            = module.vpc.vpc_id
+  alb_sg_id         = module.security.ec2_sg_id
 }
