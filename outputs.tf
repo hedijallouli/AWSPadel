@@ -19,3 +19,8 @@ output "wordpress_instance_id" {
   value       = module.ec2.instance_id
   description = "ID of the WordPress EC2 instance"
 }
+
+output "rds_endpoint" {
+  description = "RDS endpoint address"
+  value       = module.rds.rds_endpoint
+}

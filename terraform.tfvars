@@ -9,3 +9,7 @@ instance_type         = "t2.micro"
 key_name              = "vockey"
 
 ssh_access_cidr   = "128.79.194.28/32"
+
+db_username = "admin"
+db_password = "WordpressDB123!"
+db_name = "wordpress"

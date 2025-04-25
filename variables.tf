@@ -43,3 +43,19 @@ variable "ssh_access_cidr" {
   description = "CIDR block for SSH access to EC2 instance"
   type        = string
 }
+
+variable "db_username" {
+  description = "Master username for the RDS instance"
+  type        = string
+}
+
+variable "db_password" {
+  description = "Master password for the RDS instance"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_name" {
+  description = "Database name for the RDS instance"
+  type        = string
+}

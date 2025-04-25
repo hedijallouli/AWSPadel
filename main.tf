@@ -34,74 +34,7 @@ module "ec2" {
   target_group_arn   = module.alb.target_group_arn
 }
 
-#
-# ----------------------------------------------------------------------
-# Bastion Host Setup (Temporary)
-#
-# This EC2 instance is deployed in a public subnet to serve as a jump box
-# for securely accessing the WordPress EC2 instance deployed in a private subnet.
-#
-# It uses a dedicated security group that allows SSH access only from the
-# user's IP address (defined via ssh_access_cidr). Additionally, a separate
-# security group rule is configured to allow this bastion to reach the
-# private EC2 instance over port 22 (SSH).
-#
-# Once an Application Load Balancer (ALB) is deployed to access WordPress
-# over HTTP, and optionally SSM is configured for secure management,
-# this bastion instance can be removed.
-# ----------------------------------------------------------------------
-#
-
-# -------------------------------------------------------
-# Bastion setup temporarily disabled (replaced by ALB)
-# -------------------------------------------------------
-
-# resource "aws_security_group" "bastion_sg" {
-#   name        = "bastion-sg"
-#   description = "Allow SSH from your IP"
-#   vpc_id      = module.vpc.vpc_id
-#
-#   ingress {
-#     from_port   = 22
-#     to_port     = 22
-#     protocol    = "tcp"
-#     cidr_blocks = [var.ssh_access_cidr]
-#   }
-#
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#
-#   tags = {
-#     Name = "bastion-sg"
-#   }
-# }
-
-# resource "aws_instance" "bastion" {
-#   ami                    = var.ami_id
-#   instance_type          = "t2.micro"
-#   subnet_id              = module.vpc.public_subnet_ids[0]
-#   key_name               = var.key_name
-#   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
-#
-#   tags = {
-#     Name = "bastion-host"
-#   }
-# }
-
-# resource "aws_security_group_rule" "ssh_from_bastion_to_ec2" {
-#   type                     = "ingress"
-#   from_port                = 22
-#   to_port                  = 22
-#   protocol                 = "tcp"
-#   security_group_id        = module.security.ec2_sg_id
-#   source_security_group_id = aws_security_group.bastion_sg.id
-#
-#   description = "Allow SSH from bastion SG to EC2 SG"
-# }
+# Bastion setup removed after ALB and private access established
 
 # Application Load Balancer module
 module "alb" {
@@ -109,4 +42,14 @@ module "alb" {
   public_subnet_ids = module.vpc.public_subnet_ids
   vpc_id            = module.vpc.vpc_id
   alb_sg_id         = module.security.ec2_sg_id
+}
+
+# RDS module
+module "rds" {
+  source                = "./modules/rds"
+  db_username           = var.db_username
+  db_password           = var.db_password
+  vpc_security_group_ids = [module.security.ec2_sg_id]
+  db_subnet_ids         = module.vpc.private_subnet_ids
+  db_name               = var.db_name
 }
