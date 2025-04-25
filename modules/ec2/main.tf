@@ -1,5 +1,3 @@
-
-
 resource "aws_instance" "wordpress" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
@@ -12,8 +10,21 @@ resource "aws_instance" "wordpress" {
     dnf update -y
     dnf install -y httpd php php-mysqli php-fpm tar wget
 
+    # Start services
     systemctl enable --now httpd
+    systemctl enable --now php-fpm
 
+    # Configure Apache to use PHP-FPM
+    cat <<EOC > /etc/httpd/conf.d/php.conf
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/run/php-fpm/www.sock|fcgi://localhost"
+    </FilesMatch>
+
+    DirectoryIndex index.php
+    EOC
+
+    # Set up WordPress
+    mkdir -p /var/www/html
     cd /var/www/html
     rm -rf *
     wget https://wordpress.org/latest.tar.gz
@@ -21,6 +32,8 @@ resource "aws_instance" "wordpress" {
     cp -r wordpress/* .
     chown -R apache:apache /var/www/html
     chmod -R 755 /var/www/html
+
+    systemctl restart httpd
   EOF
 
   tags = {
