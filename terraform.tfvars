@@ -8,4 +8,4 @@ ami_id                = "ami-05572e392e80aee89"
 instance_type         = "t2.micro"
 key_name              = "vockey"
 
-ssh_access_cidr   = " 128.79.194.28/32"
+ssh_access_cidr   = "128.79.194.28/32"
