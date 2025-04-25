@@ -47,6 +47,7 @@ variable "ssh_access_cidr" {
 variable "db_username" {
   description = "Master username for the RDS instance"
   type        = string
+  sensitive   = true
 }
 
 variable "db_password" {
