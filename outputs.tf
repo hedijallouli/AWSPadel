@@ -9,3 +9,13 @@ output "public_subnet_ids" {
 output "private_subnet_ids" {
   value = module.vpc.private_subnet_ids
 }
+
+output "alb_dns_name" {
+  value       = module.alb.alb_dns_name
+  description = "DNS name of the Application Load Balancer"
+}
+
+output "wordpress_instance_id" {
+  value       = module.ec2.wordpress_instance_id
+  description = "ID of the WordPress EC2 instance"
+}
