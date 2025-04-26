@@ -32,6 +32,11 @@ module "ec2" {
   security_group_id  = module.security.ec2_sg_id
   key_name           = var.key_name
   target_group_arn   = module.alb.target_group_arn
+
+  db_name            = var.db_name
+  db_username        = var.db_username
+  db_password        = var.db_password
+  db_host            = module.rds.rds_endpoint
 }
 
 # Bastion setup removed after ALB and private access established

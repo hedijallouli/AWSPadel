@@ -8,7 +8,7 @@ resource "aws_instance" "wordpress" {
   user_data = <<-EOF
     #!/bin/bash
     dnf update -y
-    dnf install -y httpd php php-mysqli php-fpm tar wget
+    dnf install -y httpd php php-mysqli php-fpm mariadb wget tar
 
     # Start services
     systemctl enable --now httpd
@@ -26,12 +26,18 @@ resource "aws_instance" "wordpress" {
     # Set up WordPress
     mkdir -p /var/www/html
     cd /var/www/html
-    rm -rf *
     wget https://wordpress.org/latest.tar.gz
     tar -xzf latest.tar.gz
     cp -r wordpress/* .
     chown -R apache:apache /var/www/html
     chmod -R 755 /var/www/html
+
+    # Configure WordPress to use RDS
+    cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+    sed -i "s/database_name_here/${db_name}/" /var/www/html/wp-config.php
+    sed -i "s/username_here/${db_username}/" /var/www/html/wp-config.php
+    sed -i "s/password_here/${db_password}/" /var/www/html/wp-config.php
+    sed -i "s/localhost/${db_host}/" /var/www/html/wp-config.php
 
     systemctl restart httpd
   EOF

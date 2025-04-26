@@ -31,3 +31,25 @@ variable "target_group_arn" {
   type        = string
   description = "ARN of the ALB target group"
 }
+
+variable "db_name" {
+  description = "The database name for WordPress to connect to"
+  type        = string
+}
+
+variable "db_username" {
+  description = "The database username for WordPress"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_password" {
+  description = "The database password for WordPress"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_host" {
+  description = "The database endpoint (host) for WordPress to connect to"
+  type        = string
+}
