@@ -5,42 +5,12 @@ resource "aws_instance" "wordpress" {
   vpc_security_group_ids = [var.security_group_id]
   key_name               = var.key_name
 
-  user_data = <<-EOF
-    #!/bin/bash
-    dnf update -y
-    dnf install -y httpd php php-mysqli php-fpm mariadb wget tar
-
-    # Start services
-    systemctl enable --now httpd
-    systemctl enable --now php-fpm
-
-    # Configure Apache to use PHP-FPM
-    cat <<EOC > /etc/httpd/conf.d/php.conf
-    <FilesMatch \.php$>
-        SetHandler "proxy:unix:/run/php-fpm/www.sock|fcgi://localhost"
-    </FilesMatch>
-
-    DirectoryIndex index.php
-    EOC
-
-    # Set up WordPress
-    mkdir -p /var/www/html
-    cd /var/www/html
-    wget https://wordpress.org/latest.tar.gz
-    tar -xzf latest.tar.gz
-    cp -r wordpress/* .
-    chown -R apache:apache /var/www/html
-    chmod -R 755 /var/www/html
-
-    # Configure WordPress to use RDS
-    cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
-    sed -i "s/database_name_here/${db_name}/" /var/www/html/wp-config.php
-    sed -i "s/username_here/${db_username}/" /var/www/html/wp-config.php
-    sed -i "s/password_here/${db_password}/" /var/www/html/wp-config.php
-    sed -i "s/localhost/${db_host}/" /var/www/html/wp-config.php
-
-    systemctl restart httpd
-  EOF
+  user_data = templatefile("${path.module}/user_data.sh", {
+    db_name     = var.db_name
+    db_username = var.db_username
+    db_password = var.db_password
+    db_host     = var.db_host
+  })
 
   tags = {
     Name = "wordpress-ec2"
