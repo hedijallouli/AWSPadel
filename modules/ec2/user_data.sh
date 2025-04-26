@@ -7,8 +7,10 @@ yum clean metadata
 yum install -y php php-cli php-mysqlnd php-fpm php-json php-common php-mbstring php-xml php-gd php-curl
 yum install -y httpd wget
 
-systemctl start httpd
+systemctl enable php-fpm
+systemctl start php-fpm
 systemctl enable httpd
+systemctl start httpd
 
 cd /var/www/html
 wget https://wordpress.org/latest.tar.gz
