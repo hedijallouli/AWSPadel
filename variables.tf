@@ -60,3 +60,9 @@ variable "db_name" {
   description = "Database name for the RDS instance"
   type        = string
 }
+
+variable "bastion_instance_type" {
+  description = "EC2 Instance type for the Bastion host"
+  type        = string
+  default     = "t2.micro"
+}
