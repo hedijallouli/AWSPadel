@@ -39,15 +39,15 @@ module "ec2" {
   db_host            = module.rds.rds_endpoint
 }
 
-# Bastion Host module
-module "bastion" {
-  source            = "./modules/bastion"
-  ami_id            = var.ami_id
-  instance_type     = var.bastion_instance_type
-  public_subnet_id  = module.vpc.public_subnet_ids[0]
-  security_group_id = module.security.bastion_sg_id
-  key_name          = var.key_name
-}
+# # Bastion Host module
+# module "bastion" {
+#   source            = "./modules/bastion"
+#   ami_id            = var.ami_id
+#   instance_type     = var.bastion_instance_type
+#   public_subnet_id  = module.vpc.public_subnet_ids[0]
+#   security_group_id = module.security.bastion_sg_id
+#   key_name          = var.key_name
+# }
 
 # Application Load Balancer module
 module "alb" {
