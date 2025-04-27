@@ -1,21 +1,30 @@
 #!/bin/bash
 yum update -y
-yum install -y httpd php php-mysqlnd wget unzip php-fpm php-opcache php-gd php-curl php-mbstring php-xml php-xmlrpc
 
+# Install required packages
+yum install -y httpd php php-mysqlnd php-fpm wget unzip
+
+# Create /var/www/html if not exists
+mkdir -p /var/www/html
+
+# Enable and start Apache and PHP-FPM
 systemctl enable httpd
 systemctl start httpd
 systemctl enable php-fpm
 systemctl start php-fpm
 
+# Download and set up WordPress
 cd /var/www/html
 wget https://wordpress.org/latest.tar.gz
 tar -xzf latest.tar.gz
 cp -r wordpress/* .
 rm -rf wordpress latest.tar.gz
 
+# Set correct permissions
 chown -R apache:apache /var/www/html
 chmod -R 755 /var/www/html
 
+# Configure Apache for WordPress
 cat <<EOT > /etc/httpd/conf.d/wordpress.conf
 <Directory /var/www/html>
     DirectoryIndex index.php index.html
@@ -24,10 +33,11 @@ cat <<EOT > /etc/httpd/conf.d/wordpress.conf
 </Directory>
 EOT
 
-cp wp-config-sample.php wp-config.php
-sed -i "s/database_name_here/DB_NAME_PLACEHOLDER/" wp-config.php
-sed -i "s/username_here/DB_USERNAME_PLACEHOLDER/" wp-config.php
-sed -i "s/password_here/DB_PASSWORD_PLACEHOLDER/" wp-config.php
-sed -i "s/localhost/DB_HOST_PLACEHOLDER/" wp-config.php
+# Inject database configuration into wp-config.php
+sed -i "s/database_name_here/${db_name}/" /var/www/html/wp-config.php
+sed -i "s/username_here/${db_username}/" /var/www/html/wp-config.php
+sed -i "s/password_here/${db_password}/" /var/www/html/wp-config.php
+sed -i "s/localhost/${db_host}/" /var/www/html/wp-config.php
 
+# Restart Apache to apply changes
 systemctl restart httpd
