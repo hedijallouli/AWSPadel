@@ -25,29 +25,32 @@ module "security" {
 }
 
 module "ec2" {
-  source             = "./modules/ec2"
-  ami_id             = var.ami_id
-  instance_type      = var.instance_type
-  private_subnet_id  = module.vpc.private_subnet_ids[0]
-  security_group_id  = module.security.ec2_sg_id
-  key_name           = var.key_name
-  target_group_arn   = module.alb.target_group_arn
+  source                      = "./modules/ec2"
+  ami_id                      = var.ami_id
+  instance_type               = var.instance_type
+  # Temporary: Using public subnet for EC2 to avoid NAT Gateway costs during development
+  private_subnet_id = module.vpc.public_subnet_ids[0]
+  
+  # private_subnet_id = module.vpc.private_subnet_ids[0] # Use this line instead in production
+  security_group_id           = module.security.ec2_sg_id
+  key_name                    = var.key_name
+  target_group_arn            = module.alb.target_group_arn
 
-  db_name            = var.db_name
-  db_username        = var.db_username
-  db_password        = var.db_password
-  db_host            = module.rds.rds_endpoint
+  db_name                     = var.db_name
+  db_username                 = var.db_username
+  db_password                 = var.db_password
+  db_host                     = module.rds.rds_endpoint
 }
 
 # Bastion Host module
-module "bastion" {
-  source            = "./modules/bastion"
-  ami_id            = var.ami_id
-  instance_type     = var.bastion_instance_type
-  public_subnet_id  = module.vpc.public_subnet_ids[0]
-  security_group_id = module.security.bastion_sg_id
-  key_name          = var.key_name
-}
+# module "bastion" {
+#   source            = "./modules/bastion"
+#   ami_id            = var.ami_id
+#   instance_type     = var.bastion_instance_type
+#   public_subnet_id  = module.vpc.public_subnet_ids[0]
+#   security_group_id = module.security.bastion_sg_id
+#   key_name          = var.key_name
+# }
 
 # Application Load Balancer module
 module "alb" {
