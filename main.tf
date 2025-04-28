@@ -28,10 +28,8 @@ module "ec2" {
   source                      = "./modules/ec2"
   ami_id                      = var.ami_id
   instance_type               = var.instance_type
-  # Temporary: Using public subnet for EC2 to avoid NAT Gateway costs during development
-  private_subnet_id = module.vpc.public_subnet_ids[0]
+  public_subnet_id = module.vpc.public_subnet_ids[0] # Temporary: Launch EC2 in public subnet for testing
   
-  # private_subnet_id = module.vpc.private_subnet_ids[0] # Use this line instead in production
   security_group_id           = module.security.ec2_sg_id
   key_name                    = var.key_name
   target_group_arn            = module.alb.target_group_arn
