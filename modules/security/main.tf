@@ -3,36 +3,36 @@ resource "aws_security_group" "ec2_sg" {
   description = "Allow HTTP from ALB"
   vpc_id      = var.vpc_id
 
-  # Ingress rule to allow HTTP access from anywhere (for temporary testing)
-  ingress {
-    description = "Allow HTTP from anywhere (for testing)"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Temporary SSH access for testing
-  ingress {
-    description = "Allow SSH from anywhere (temporary for testing)"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Egress rule to allow all outbound traffic
-  egress {
-    description = "Allow all outbound"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "wordpress-ec2-sg"
   }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ec2_http" {
+  security_group_id = aws_security_group.ec2_sg.id
+  description       = "Allow HTTP from anywhere (for testing)"
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ec2_ssh" {
+  security_group_id = aws_security_group.ec2_sg.id
+  description       = "Allow SSH from anywhere (temporary for testing)"
+  from_port         = 22
+  to_port           = 22
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
+resource "aws_vpc_security_group_egress_rule" "ec2_all_outbound" {
+  security_group_id = aws_security_group.ec2_sg.id
+  description       = "Allow all outbound"
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 0
+  to_port           = 0
 }
 
 # Commented out for cost-saving during development phase (no Bastion Host needed)
