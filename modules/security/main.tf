@@ -31,8 +31,6 @@ resource "aws_vpc_security_group_egress_rule" "ec2_all_outbound" {
   description       = "Allow all outbound"
   ip_protocol       = "-1"
   cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 0
-  to_port           = 0
 }
 
 # Commented out for cost-saving during development phase (no Bastion Host needed)
