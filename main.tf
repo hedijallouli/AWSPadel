@@ -67,3 +67,16 @@ module "rds" {
   db_subnet_ids         = module.vpc.private_subnet_ids
   db_name               = var.db_name
 }
+
+module "autoscaling" {
+  source              = "./modules/autoscaling"
+  public_subnet_ids     = module.vpc.public_subnet_ids
+  vpc_zone_identifier = module.vpc.public_subnet_ids
+  target_group_arn    = module.alb.target_group_arn
+  ami_id              = var.ami_id
+  instance_type       = var.instance_type
+  security_group_id   = module.security.ec2_sg_id
+  key_name            = var.key_name
+  user_data_base64    = var.user_data_base64
+  launch_template_id  = module.autoscaling.launch_template_id
+}

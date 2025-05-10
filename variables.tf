@@ -66,3 +66,8 @@ variable "bastion_instance_type" {
   type        = string
   default     = "t2.micro"
 }
+
+variable "user_data_base64" {
+  description = "Base64-encoded user data script for EC2 instances"
+  type        = string
+}
