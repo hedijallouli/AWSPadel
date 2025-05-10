@@ -1,5 +1,3 @@
-
-
 output "asg_name" {
   description = "The name of the Auto Scaling Group"
   value       = aws_autoscaling_group.wordpress.name
@@ -12,7 +10,7 @@ output "asg_arn" {
 
 output "launch_template_id" {
   description = "The ID of the launch template used"
-  value       = aws_launch_template.wordpress_launch.id
+  value       = aws_launch_template.wordpress.id
 }
 
 output "asg_min_size" {
