@@ -13,13 +13,17 @@ systemctl start httpd
 systemctl enable php-fpm
 systemctl start php-fpm
 
-# Create a test info page to help with Auto Scaling testing
-AZ=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
-IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
-
-echo "<h1>Instance Info</h1>" > /var/www/html/instance-info.html
-echo "<p>AZ: $AZ</p>" >> /var/www/html/instance-info.html
-echo "<p>Public IP: $IP</p>" >> /var/www/html/instance-info.html
+# Create a dynamic PHP info page for Auto Scaling testing
+mkdir -p /var/www/html/info
+cat <<EOT > /var/www/html/info/index.php
+<?php
+  \$az = file_get_contents("http://169.254.169.254/latest/meta-data/placement/availability-zone");
+  \$ip = file_get_contents("http://169.254.169.254/latest/meta-data/public-ipv4");
+?>
+<h1>Instance Info</h1>
+<p>AZ: <?= \$az ?></p>
+<p>Public IP: <?= \$ip ?></p>
+EOT
 
 # Download and set up WordPress
 cd /var/www/html
