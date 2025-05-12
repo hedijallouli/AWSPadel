@@ -17,12 +17,12 @@ systemctl start php-fpm
 mkdir -p /var/www/html/info
 cat <<EOT > /var/www/html/info/index.php
 <?php
-  \$az = file_get_contents("http://169.254.169.254/latest/meta-data/placement/availability-zone");
-  \$ip = file_get_contents("http://169.254.169.254/latest/meta-data/public-ipv4");
+  \$az = @file_get_contents("http://169.254.169.254/latest/meta-data/placement/availability-zone") ?: 'Unavailable';
+  \$ip = @file_get_contents("http://169.254.169.254/latest/meta-data/public-ipv4") ?: 'Unavailable';
 ?>
 <h1>Instance Info</h1>
-<p>AZ: <?= \$az ?></p>
-<p>Public IP: <?= \$ip ?></p>
+<p>AZ: <?= htmlspecialchars(\$az) ?></p>
+<p>Public IP: <?= htmlspecialchars(\$ip) ?></p>
 EOT
 
 # Download and set up WordPress
