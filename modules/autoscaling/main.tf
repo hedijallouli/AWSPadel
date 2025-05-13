@@ -10,6 +10,11 @@ resource "aws_launch_template" "wordpress" {
     security_groups             = [var.security_group_id]
   }
 
+  metadata_options {
+  http_tokens   = "optional"
+  http_endpoint = "enabled"
+}
+
   user_data = var.user_data_base64
 
   lifecycle {
