@@ -25,3 +25,13 @@ variable "db_subnet_ids" {
   description = "List of subnet IDs for the DB subnet group"
   type        = list(string)
 }
+
+variable "rds_sg_id" {
+  description = "The security group ID to assign to the RDS instance"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "The ID of the VPC"
+  type        = string
+}
