@@ -69,6 +69,8 @@ module "rds" {
   vpc_security_group_ids = [module.security.rds_sg_id]
   db_subnet_ids         = module.vpc.private_subnet_ids
   db_name               = var.db_name
+  rds_sg_id             = module.security.rds_sg_id
+  vpc_id                = module.vpc.vpc_id
 }
 
 module "autoscaling" {
