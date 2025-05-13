@@ -28,7 +28,7 @@ module "ec2" {
   source                      = "./modules/ec2"
   ami_id                      = var.ami_id
   instance_type               = var.instance_type
-  public_subnet_id = module.vpc.public_subnet_ids[0] # Temporary: Launch EC2 in public subnet for testing
+  private_subnet_id = module.vpc.private_subnet_ids[0] # Now using private subnet with NAT Gateway
   
   security_group_id           = module.security.ec2_sg_id
   key_name                    = var.key_name
@@ -41,14 +41,14 @@ module "ec2" {
 }
 
 # Bastion Host module
-# module "bastion" {
-#   source            = "./modules/bastion"
-#   ami_id            = var.ami_id
-#   instance_type     = var.bastion_instance_type
-#   public_subnet_id  = module.vpc.public_subnet_ids[0]
-#   security_group_id = module.security.bastion_sg_id
-#   key_name          = var.key_name
-# }
+module "bastion" {
+  source            = "./modules/bastion"
+  ami_id            = var.ami_id
+  instance_type     = var.bastion_instance_type
+  public_subnet_id  = module.vpc.public_subnet_ids[0]
+  security_group_id = module.security.bastion_sg_id
+  key_name          = var.key_name
+}
 
 # Application Load Balancer module
 module "alb" {

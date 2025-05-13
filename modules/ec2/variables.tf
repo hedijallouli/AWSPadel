@@ -12,10 +12,9 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
-# Note: private_subnet_id temporarily replaced by public_subnet_id for dev testing
-# TEMPORARY: Using public subnet for development phase (no NAT Gateway)
-variable "public_subnet_id" {
-  description = "ID of the public subnet where the instance will be launched"
+
+variable "private_subnet_id" {
+  description = "ID of the private subnet where the instance will be launched"
   type        = string
 }
 
