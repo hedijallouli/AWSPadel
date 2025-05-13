@@ -22,7 +22,7 @@ module "security" {
   source            = "./modules/security"
   vpc_id            = module.vpc.vpc_id
   ssh_access_cidr   = var.ssh_access_cidr
-  ec2_sg_id         = module.ec2.ec2_sg_id
+  ec2_sg_id         = module.security.ec2_sg_id
   alb_sg_id         = module.alb.alb_sg_id
 }
 
