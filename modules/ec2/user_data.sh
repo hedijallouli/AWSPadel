@@ -34,10 +34,17 @@ EOT
 cp wp-config-sample.php wp-config.php
 
 # Inject database configuration into wp-config.php
+cp wp-config-sample.php wp-config.php
 sed -i "s/database_name_here/${db_name}/" wp-config.php
 sed -i "s/username_here/${db_username}/" wp-config.php
 sed -i "s/password_here/${db_password}/" wp-config.php
 sed -i "s/localhost/${db_host}/" wp-config.php
+
+# Install MariaDB client (for connectivity validation)
+dnf install -y mariadb105
+
+# Test DB connection (optional)
+mysql -h ${db_host} -u ${db_username} -p${db_password} -e "SHOW DATABASES;" || echo "Database connection failed"
 
 # Restart Apache to apply changes
 systemctl restart httpd

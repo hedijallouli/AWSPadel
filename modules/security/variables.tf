@@ -12,3 +12,8 @@ variable "alb_sg_id" {
   description = "Security group ID of the Application Load Balancer"
   type        = string
 }
+
+variable "ec2_sg_id" {
+  description = "Security Group ID of EC2 instances"
+  type        = string
+}
