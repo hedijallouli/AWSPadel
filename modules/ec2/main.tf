@@ -31,7 +31,7 @@ resource "aws_instance" "wordpress" {
     db_name     = var.db_name
     db_username = var.db_username
     db_password = var.db_password
-    db_host     = var.db_host
+    db_host     = split(":", var.db_host)[0]
   })
 
   tags = {
