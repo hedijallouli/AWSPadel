@@ -22,6 +22,7 @@ module "security" {
   source            = "./modules/security"
   vpc_id            = module.vpc.vpc_id
   ssh_access_cidr   = var.ssh_access_cidr
+  alb_sg_id         = module.alb.alb_sg_id
 }
 
 module "ec2" {
