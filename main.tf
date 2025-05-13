@@ -65,7 +65,7 @@ module "rds" {
   source                = "./modules/rds"
   db_username           = var.db_username
   db_password           = var.db_password
-  vpc_security_group_ids = [module.security.ec2_sg_id]
+  vpc_security_group_ids = [module.security.rds_sg_id]
   db_subnet_ids         = module.vpc.private_subnet_ids
   db_name               = var.db_name
 }
