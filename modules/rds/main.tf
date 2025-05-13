@@ -7,31 +7,6 @@ resource "aws_db_subnet_group" "this" {
   }
 }
 
-resource "aws_security_group" "rds_sg" {
-  name        = "rds_sg"
-  description = "Security group for RDS instance"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    description     = "Allow MySQL from EC2 SG"
-    from_port       = 3306
-    to_port         = 3306
-    protocol        = "tcp"
-    security_groups = [var.ec2_sg_id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "RDS Security Group"
-  }
-}
-
 resource "aws_db_instance" "this" {
   identifier             = "wordpress-db"
   allocated_storage      = 20
@@ -41,7 +16,7 @@ resource "aws_db_instance" "this" {
   username               = var.db_username
   password               = var.db_password
   db_subnet_group_name   = aws_db_subnet_group.this.name
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
+  vpc_security_group_ids = var.vpc_security_group_ids
   skip_final_snapshot    = true
   publicly_accessible    = false
   apply_immediately      = true

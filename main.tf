@@ -22,6 +22,8 @@ module "security" {
   source            = "./modules/security"
   vpc_id            = module.vpc.vpc_id
   ssh_access_cidr   = var.ssh_access_cidr
+  alb_sg_id         = module.alb.alb_sg_id
+  ec2_sg_id         = module.security.ec2_sg_id
 }
 
 module "ec2" {
@@ -67,7 +69,6 @@ module "rds" {
   db_subnet_ids          = module.vpc.private_subnet_ids
   db_name                = var.db_name
   vpc_id                 = module.vpc.vpc_id
-  ec2_sg_id              = module.security.ec2_sg_id
 }
 
 module "autoscaling" {

@@ -61,7 +61,7 @@ resource "aws_security_group_rule" "ssh_from_bastion_to_ec2" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "allow_mysql_from_ec2" {
-  security_group_id            = var.rds_sg_id
+  security_group_id            = aws_security_group.rds_sg.id
   from_port                    = 3306
   to_port                      = 3306
   ip_protocol                  = "tcp"
