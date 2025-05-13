@@ -56,7 +56,8 @@ module "alb" {
   source            = "./modules/alb"
   public_subnet_ids = module.vpc.public_subnet_ids
   vpc_id            = module.vpc.vpc_id
-  alb_sg_id         = module.security.ec2_sg_id
+  # ALB Security Group passed from the ALB module
+  alb_sg_id         = module.alb.alb_sg_id
 }
 
 # RDS module

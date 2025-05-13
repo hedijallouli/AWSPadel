@@ -10,7 +10,7 @@ resource "aws_security_group" "ec2_sg" {
 
 resource "aws_vpc_security_group_ingress_rule" "ec2_http" {
   security_group_id = aws_security_group.ec2_sg.id
-  description       = "Allow HTTP from anywhere (for testing)"
+  description       = "Allow HTTP from ALB SG"
   from_port         = 80
   to_port           = 80
   ip_protocol       = "tcp"
