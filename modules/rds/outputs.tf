@@ -6,5 +6,6 @@ output "rds_endpoint" {
 }
 
 output "rds_sg_id" {
-  value = aws_security_group.rds_sg.id
+  description = "The security group ID associated with the RDS instance"
+  value       = aws_security_group.rds_sg.id
 }

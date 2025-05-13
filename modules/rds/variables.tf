@@ -26,12 +26,12 @@ variable "db_subnet_ids" {
   type        = list(string)
 }
 
-variable "rds_sg_id" {
-  description = "The security group ID to assign to the RDS instance"
+variable "vpc_id" {
+  description = "The ID of the VPC"
   type        = string
 }
 
-variable "vpc_id" {
-  description = "The ID of the VPC"
+variable "ec2_sg_id" {
+  description = "The security group ID of the EC2 instances that should access RDS"
   type        = string
 }

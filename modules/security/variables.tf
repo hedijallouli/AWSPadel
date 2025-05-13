@@ -17,8 +17,3 @@ variable "ec2_sg_id" {
   description = "Security Group ID of EC2 instances"
   type        = string
 }
-
-variable "rds_sg_id" {
-  description = "Security Group ID of the RDS instance"
-  type        = string
-}
