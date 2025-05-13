@@ -24,6 +24,7 @@ module "security" {
   ssh_access_cidr   = var.ssh_access_cidr
   ec2_sg_id         = module.security.ec2_sg_id
   alb_sg_id         = module.alb.alb_sg_id
+  rds_sg_id         = module.rds.rds_sg_id
 }
 
 module "ec2" {
