@@ -22,7 +22,6 @@ module "security" {
   source            = "./modules/security"
   vpc_id            = module.vpc.vpc_id
   ssh_access_cidr   = var.ssh_access_cidr
-  alb_sg_id         = module.alb.alb_sg_id
 }
 
 module "ec2" {
@@ -57,7 +56,6 @@ module "alb" {
   public_subnet_ids = module.vpc.public_subnet_ids
   vpc_id            = module.vpc.vpc_id
   # ALB Security Group passed from the ALB module
-  alb_sg_id         = module.alb.alb_sg_id
 }
 
 # RDS module

@@ -9,6 +9,6 @@ output "target_group_arn" {
 }
 
 output "alb_sg_id" {
-  description = "The security group ID for the ALB"
   value       = aws_security_group.alb_sg.id
+  description = "ID of the ALB security group"
 }
