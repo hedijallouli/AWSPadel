@@ -52,5 +52,9 @@ EOF
 # Test DB connection (optional)
 mysql -h ${db_host} -u ${db_username} -p${db_password} -e "SHOW DATABASES;" || echo "Database connection failed"
 
+# Download and restore WordPress SQL backup from GitHub
+wget https://raw.githubusercontent.com/hedijallouli/AWSPadel/main/modules/ec2/wordpress.sql -O /tmp/wordpress.sql
+mysql -h ${db_host} -u ${db_username} -p${db_password} ${db_name} < /tmp/wordpress.sql
+
 # Restart Apache to apply changes
 systemctl restart httpd
