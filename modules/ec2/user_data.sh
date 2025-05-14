@@ -43,9 +43,8 @@ sed -i "s/localhost/${db_host}/" wp-config.php
 dnf install -y mariadb105
 
 # Create database and user if they don't exist
-mysql -h ${db_host} -u admin -p${db_password} <<EOF
+mysql -h ${db_host} -u ${db_username} -p${db_password} <<EOF
 CREATE DATABASE IF NOT EXISTS ${db_name};
-CREATE USER IF NOT EXISTS '${db_username}'@'%' IDENTIFIED BY '${db_password}';
 GRANT ALL PRIVILEGES ON ${db_name}.* TO '${db_username}'@'%';
 FLUSH PRIVILEGES;
 EOF
